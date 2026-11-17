@@ -1,0 +1,196 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JARVIS AI</title>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: #070d18;
+  color: #e8f4ff;
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+header {
+  width: 100%;
+  padding: 22px;
+  text-align: center;
+  border-bottom: 1px solid #193653;
+  letter-spacing: 5px;
+  color: #68caff;
+}
+h1 { margin: 0; font-size: 28px; }
+.status {
+  color: #65dca8;
+  font-size: 12px;
+  margin-top: 9px;
+  letter-spacing: 2px;
+}
+.core {
+  width: 175px;
+  height: 175px;
+  margin: 45px auto 25px;
+  border-radius: 50%;
+  border: 2px solid #38baff;
+  box-shadow: 0 0 25px #087ccf,
+              inset 0 0 30px #087ccf;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: pulse 3s infinite;
+}
+.core span {
+  font-size: 43px;
+  color: #77d7ff;
+  text-shadow: 0 0 20px #38baff;
+}
+@keyframes pulse {
+  50% { box-shadow: 0 0 45px #168cff,
+                    inset 0 0 45px #168cff; }
+}
+main {
+  width: 90%;
+  max-width: 500px;
+}
+h2 {
+  text-align: center;
+  font-size: 15px;
+  letter-spacing: 3px;
+  color: #6bbfff;
+}
+.chat {
+  height: 230px;
+  overflow-y: auto;
+  border: 1px solid #21466a;
+  border-radius: 14px;
+  padding: 15px;
+  background: #0c1727;
+  margin-top: 20px;
+}
+.message {
+  margin-bottom: 14px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+.jarvis { color: #69caff; }
+.user { color: #8fe5b5; }
+.input-area {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+input {
+  min-width: 0;
+  flex: 1;
+  padding: 14px;
+  background: #101e30;
+  border: 1px solid #285276;
+  border-radius: 10px;
+  color: white;
+}
+button {
+  padding: 13px 16px;
+  border: 1px solid #38baff;
+  background: #123b60;
+  color: white;
+  border-radius: 10px;
+}
+button:active { background: #176da0; }
+.actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin: 18px 0 35px;
+}
+footer {
+  color: #526b84;
+  font-size: 11px;
+  padding: 20px;
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>J.A.R.V.I.S.</h1>
+  <div class="status">● SYSTEM ONLINE</div>
+</header>
+
+<div class="core">
+  <span>J</span>
+</div>
+
+<main>
+  <h2>PERSONAL AI ASSISTANT</h2>
+
+  <div class="chat" id="chat">
+    <div class="message jarvis">
+      JARVIS: Приветствую, главный.
+      Моя система запущена. Чем могу помочь?
+    </div>
+  </div>
+
+  <div class="input-area">
+    <input id="question" placeholder="Напиши команду...">
+    <button onclick="sendMessage()">➤</button>
+  </div>
+
+  <div class="actions">
+    <button onclick="speak()">🎙 Голос</button>
+    <button onclick="clearChat()">Очистить</button>
+  </div>
+</main>
+
+<footer>JARVIS PERSONAL SYSTEM • VERSION 0.1</footer>
+
+<script>
+function sendMessage() {
+  const input = document.getElementById("question");
+  const chat = document.getElementById("chat");
+  const text = input.value.trim();
+
+  if (!text) return;
+
+  chat.innerHTML +=
+    `<div class="message user">ТЫ: ${escapeHTML(text)}</div>`;
+
+  chat.innerHTML +=
+    `<div class="message jarvis">JARVIS: Я получил твою команду. Мой искусственный интеллект пока находится в разработке.</div>`;
+
+  input.value = "";
+  chat.scrollTop = chat.scrollHeight;
+}
+
+function escapeHTML(text) {
+  return text.replace(/[&<>"']/g, c => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;",
+    '"': "&quot;", "'": "&#39;"
+  })[c]);
+}
+
+function clearChat() {
+  document.getElementById("chat").innerHTML =
+    '<div class="message jarvis">JARVIS: Готов к работе.</div>';
+}
+
+function speak() {
+  if (!("speechSynthesis" in window)) {
+    alert("Голосовой синтез не поддерживается");
+    return;
+  }
+  const speech = new SpeechSynthesisUtterance(
+    "Здравствуйте, главный. Я Джарвис."
+  );
+  speech.lang = "ru-RU";
+  speechSynthesis.speak(speech);
+}
+</script>
+
+</body>
+</html>
